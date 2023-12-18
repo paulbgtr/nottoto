@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-async fn create(
-    client: reqwest::Client,
+pub async fn create(
+    client: &reqwest::Client,
     file_name: String,
     file_body: String,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -18,8 +18,8 @@ async fn create(
     Ok(())
 }
 
-async fn update(
-    client: reqwest::Client,
+pub async fn update(
+    client: &reqwest::Client,
     file_id: u16,
     file_name: Option<String>,
     file_body: Option<String>,
@@ -40,7 +40,10 @@ async fn update(
     Ok(())
 }
 
-async fn delete(client: reqwest::Client, file_id: u16) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn delete(
+    client: &reqwest::Client,
+    file_id: String,
+) -> Result<(), Box<dyn std::error::Error>> {
     let url = format!("http://localhost:3001/notes/{}", file_id);
 
     let res = client.delete(url).send().await?;
@@ -48,7 +51,7 @@ async fn delete(client: reqwest::Client, file_id: u16) -> Result<(), Box<dyn std
     Ok(())
 }
 
-async fn find(file_id: u16) -> Result<String, Box<dyn std::error::Error>> {
+pub async fn find(file_id: String) -> Result<String, Box<dyn std::error::Error>> {
     let url = format!("http://localhost:3001/notes/{}", file_id);
 
     let res_body = reqwest::get(url).await?.text().await?;
