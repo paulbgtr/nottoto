@@ -5,18 +5,17 @@ use clap::Parser;
     clap::ArgGroup::new("command")
     .required(true)
     .args(&["create", "update", "delete", "find"])
-    .required(true)
 ))]
 pub struct Args {
     #[arg(short, long)]
-    create: Option<String>,
+    pub create: Option<String>,
 
     #[arg(short, long)]
-    update: Option<String>,
+    pub update: Option<String>,
 
     #[arg(short, long)]
-    delete: Option<String>,
+    pub delete: Option<String>,
 
     #[arg(short, long)]
-    find: Option<String>,
+    pub find: Option<String>,
 }
