@@ -20,7 +20,7 @@ async fn create(
 
 async fn update(
     client: reqwest::Client,
-    file_id: i32,
+    file_id: u16,
     file_name: Option<String>,
     file_body: Option<String>,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -40,10 +40,18 @@ async fn update(
     Ok(())
 }
 
-async fn delete(client: reqwest::Client, file_id: i32) -> Result<(), Box<dyn std::error::Error>> {
+async fn delete(client: reqwest::Client, file_id: u16) -> Result<(), Box<dyn std::error::Error>> {
     let url = format!("http://localhost:3001/notes/{}", file_id);
 
     let res = client.delete(url).send().await?;
 
     Ok(())
+}
+
+async fn find(file_id: u16) -> Result<String, Box<dyn std::error::Error>> {
+    let url = format!("http://localhost:3001/notes/{}", file_id);
+
+    let res_body = reqwest::get(url).await?.text().await?;
+
+    Ok(res_body)
 }
