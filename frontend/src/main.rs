@@ -1,4 +1,5 @@
 mod args;
+mod cli;
 mod requests;
 
 use args::Args;
