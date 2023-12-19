@@ -15,7 +15,7 @@ pub async fn handle_args(
     }
 
     if let Some(file_id) = args.delete {
-        requests::delete(&client, file_id).await?;
+        let res = requests::delete(&client, file_id).await?;
     }
 
     if let Some(file_name) = args.find {
