@@ -43,12 +43,14 @@ pub async fn update(
 pub async fn delete(
     client: &reqwest::Client,
     file_id: String,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<&str, Box<dyn std::error::Error>> {
     let url = format!("http://localhost:3001/notes/{}", file_id);
 
-    let res = client.delete(url).send().await?;
+    client.delete(url).send().await?;
 
-    Ok(())
+    let message = "file with id: {file_id} has been deleted";
+
+    Ok(message)
 }
 
 pub async fn find(file_id: String) -> Result<String, Box<dyn std::error::Error>> {
