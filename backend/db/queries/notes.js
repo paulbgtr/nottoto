@@ -30,3 +30,17 @@ export const createNote = async (note) => {
   return res;
 }
 
+export const updateNote = async (id, note) => {
+  const { title, body } = note;
+
+  const res = await db
+    .update(notes)
+    .set({
+      title,
+      body,
+    })
+    .where(eq(notes.id, id))
+    .returning();
+  return res;
+}
+
