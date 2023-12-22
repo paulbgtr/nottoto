@@ -1,4 +1,4 @@
-import { getNotes, getNote, createNote } from "../db/queries/notes.js";
+import { getNotes, getNote, createNote, updateNote } from "../db/queries/notes.js";
 
 export const getAllNotes = async (req, res) => {
   try {
@@ -30,6 +30,21 @@ export const postNote = async (req, res) => {
       body,
     });
     res.status(201).json(note);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export const updateNoteById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, body } = req.body;
+
+    const note = await updateNote(id, {
+      title,
+      body,
+    });
+    res.status(200).json(note);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
