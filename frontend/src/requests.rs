@@ -53,10 +53,15 @@ pub async fn delete(
     Ok(message)
 }
 
-pub async fn find(note_id: u16) -> Result<String, Box<dyn std::error::Error>> {
+pub async fn find_note(
+    note_id: u16,
+) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
     let url = format!("http://localhost:3000/notes/{}", note_id);
 
-    let res_body = reqwest::get(url).await?.text().await?;
+    let res_body = reqwest::get(url)
+        .await?
+        .json::<HashMap<String, String>>()
+        .await?;
 
     Ok(res_body)
 }
