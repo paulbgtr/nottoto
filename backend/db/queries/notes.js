@@ -44,3 +44,12 @@ export const updateNote = async (id, note) => {
   return res;
 }
 
+export const deleteNote = async (id) => {
+  const res = await db
+    .delete(notes)
+    .where(eq(notes.id, id))
+    .returning();
+
+  return res;
+}
+
