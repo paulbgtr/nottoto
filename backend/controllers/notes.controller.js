@@ -1,4 +1,4 @@
-import { getNotes, getNote, createNote, updateNote } from "../db/queries/notes.js";
+import { getNotes, getNote, createNote, updateNote, deleteNote } from "../db/queries/notes.js";
 
 export const getAllNotes = async (req, res) => {
   try {
@@ -21,7 +21,7 @@ export const getNoteById = async (req, res) => {
     const [note] = await getNote(id);
 
     if (!note) {
-      res.status(404).json({ error: `Note with id ${id} not found` });
+      res.status(404).json({ error: `Note with id ${id} is not found` });
     }
 
     res.status(200).json(note);
@@ -62,6 +62,26 @@ export const updateNoteById = async (req, res) => {
       body,
     });
     res.status(200).json(note);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+export const deleteNoteById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [note] = await getNote(id);
+
+    if (!note) {
+      res.status(404).json({ error: `Note with id ${id} is not found` });
+    }
+
+    const deletedNote = await deleteNote(id);
+    res.status(200).json({
+      message: `Note with id ${id} was deleted`,
+      deletedNote
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
