@@ -4,9 +4,12 @@ use clap::Parser;
 #[clap(group(
     clap::ArgGroup::new("command")
     .required(true)
-    .args(&["create", "update", "delete", "find"])
+    .args(&["all", "create", "update", "delete", "find"])
 ))]
 pub struct Args {
+    #[arg(short, long)]
+    pub all: bool,
+
     #[arg(short, long)]
     pub create: Option<String>,
 
