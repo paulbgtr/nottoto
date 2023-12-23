@@ -12,11 +12,21 @@ pub async fn handle_args(
             return Ok(());
         }
 
-        println!("Here are your notes:\n");
-
         for note in notes.iter() {
             println!("{}: {}", note["id"], note["title"]);
         }
+    }
+
+    if let Some(note_id) = args.find {
+        let note = requests::find_note(note_id.parse::<u16>()?).await?;
+
+        if note.len() == 0 {
+            println!("Note with an id of {} is not found", note_id);
+        }
+
+        let (id, title) = (note["id"].to_string(), note["title"].to_string());
+
+        println!("{}: {}", id, title);
     }
 
     if let Some(note_title) = args.create {
@@ -29,10 +39,6 @@ pub async fn handle_args(
 
     if let Some(note_title) = args.delete {
         println!("Deleting note with title: {}", note_title);
-    }
-
-    if let Some(note_title) = args.find {
-        println!("Finding note with title: {}", note_title);
     }
 
     Ok(())
