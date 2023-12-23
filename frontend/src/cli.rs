@@ -7,7 +7,16 @@ pub async fn handle_args(
     if args.all {
         let notes = requests::get_all_notes().await?;
 
-        println!("{:?}", notes);
+        if notes.len() == 0 {
+            println!("No notes are found");
+            return Ok(());
+        }
+
+        println!("Here are your notes:\n");
+
+        for note in notes.iter() {
+            println!("{}: {}", note["id"], note["title"]);
+        }
     }
 
     if let Some(note_title) = args.create {
