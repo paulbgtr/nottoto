@@ -1,5 +1,42 @@
 use std::collections::HashMap;
 
+pub async fn get_all_notes() -> Result<Vec<HashMap<String, String>>, Box<dyn std::error::Error>> {
+    let url = "http://localhost:3000/notes";
+
+    let res = reqwest::get(url).await?;
+
+    match res.status() {
+        reqwest::StatusCode::OK => {
+            let notes: Vec<HashMap<String, String>> = res.json().await?;
+            return Ok(notes);
+        }
+        _ => {
+            return Err("Something went wrong".into());
+        }
+    }
+}
+
+pub async fn find_note(
+    note_id: u16,
+) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
+    let url = format!("http://localhost:3000/notes/{}", note_id);
+
+    let res = reqwest::get(url).await?;
+
+    match res.status() {
+        reqwest::StatusCode::OK => {
+            let note: HashMap<String, String> = res.json().await?;
+            return Ok(note);
+        }
+        reqwest::StatusCode::NOT_FOUND => {
+            return Err("Note not found".into());
+        }
+        _ => {
+            return Err("Something went wrong".into());
+        }
+    }
+}
+
 pub async fn create(
     client: &reqwest::Client,
     note_title: String,
@@ -51,17 +88,4 @@ pub async fn delete(
     let message = "file with id: {file_id} has been deleted";
 
     Ok(message)
-}
-
-pub async fn find_note(
-    note_id: u16,
-) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
-    let url = format!("http://localhost:3000/notes/{}", note_id);
-
-    let res_body = reqwest::get(url)
-        .await?
-        .json::<HashMap<String, String>>()
-        .await?;
-
-    Ok(res_body)
 }
