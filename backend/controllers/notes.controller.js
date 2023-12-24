@@ -1,4 +1,4 @@
-import { getNotes, getNote, createNote, updateNote, deleteNote } from "../db/queries/notes.js";
+import { getNotes, getNote, getNoteByTitle, createNote, updateNote, deleteNote } from "../db/queries/notes.js";
 
 export const getAllNotes = async (req, res) => {
   try {
@@ -36,6 +36,12 @@ export const postNote = async (req, res) => {
 
     if (!title) {
       res.status(400).json({ error: "Missing the required title value" });
+    }
+
+    const [noteExists] = await getNoteByTitle(title);
+
+    if (noteExists) {
+      res.status(400).json({ error: `Note with title ${title} already exists` });
     }
 
     const note = await createNote({
