@@ -17,6 +17,15 @@ export const getNote = async (id) => {
   return res;
 }
 
+export const getNoteByTitle = async (title) => {
+  const res = await db
+    .select()
+    .from(notes)
+    .where(eq(notes.title, title));
+
+  return res;
+}
+
 export const createNote = async (note) => {
   const { title, body } = note;
 
