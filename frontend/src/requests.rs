@@ -40,11 +40,14 @@ pub async fn find_note(
 pub async fn create(
     client: &reqwest::Client,
     note_title: String,
-    note_body: String,
-) -> Result<(), Box<dyn std::error::Error>> {
+    note_body: Option<String>,
+) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
     let mut data = HashMap::new();
-    data.insert("file_name", note_title);
-    data.insert("file_name", note_body);
+    data.insert("title", note_title);
+
+    if let Some(note_body) = note_body {
+        data.insert("body", note_body);
+    }
 
     let res = client
         .post("http://localhost:3000/notes")
@@ -52,7 +55,18 @@ pub async fn create(
         .send()
         .await?;
 
-    Ok(())
+    match res.status() {
+        reqwest::StatusCode::CREATED => {
+            let note: HashMap<String, String> = res.json().await?;
+            return Ok(note);
+        }
+        reqwest::StatusCode::BAD_REQUEST => {
+            return Err("Bad request".into());
+        }
+        _ => {
+            return Err("Something went wrong".into());
+        }
+    }
 }
 
 pub async fn update(
