@@ -30,7 +30,16 @@ pub async fn handle_args(
     }
 
     if let Some(note_title) = args.create {
-        println!("Creating note with title: {}", note_title);
+        // todo: impl creating a temp file and opening it in vim
+
+        let created_note = requests::create(&client, note_title, None).await?;
+
+        let (id, title) = (
+            created_note["id"].to_string(),
+            created_note["title"].to_string(),
+        );
+
+        println!("{}: {}", id, title);
     }
 
     if let Some(note_title) = args.update {
@@ -43,4 +52,3 @@ pub async fn handle_args(
 
     Ok(())
 }
-
