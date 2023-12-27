@@ -58,6 +58,13 @@ pub async fn handle_args(
 
         let renamed_note =
             requests::update(&client, note_id.parse::<u16>()?, Some(new_note_title), None).await?;
+
+        let (id, title) = (
+            renamed_note["id"].to_string(),
+            renamed_note["title"].to_string(),
+        );
+
+        println!("Updated note: {} {}", id, title);
     }
 
     if let Some(note_title) = args.delete {
