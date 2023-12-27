@@ -108,9 +108,17 @@ pub async fn delete(
 ) -> Result<&str, Box<dyn std::error::Error>> {
     let url = format!("http://localhost:3000/notes/{}", note_id);
 
-    client.delete(url).send().await?;
+    let res = client.delete(url).send().await?;
 
-    let message = "file with id: {file_id} has been deleted";
-
-    Ok(message)
+    match res.status() {
+        reqwest::StatusCode::OK => {
+            return Ok("Note deleted");
+        }
+        reqwest::StatusCode::BAD_REQUEST => {
+            return Err("Bad request".into());
+        }
+        _ => {
+            return Err("Something went wrong".into());
+        }
+    }
 }
