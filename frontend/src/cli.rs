@@ -1,4 +1,5 @@
 use crate::requests;
+use crate::utils;
 
 pub async fn handle_args(
     args: crate::args::Args,
@@ -18,11 +19,7 @@ pub async fn handle_args(
     }
 
     if let Some(note_id) = args.find {
-        let note = requests::find_note(note_id.parse::<u16>()?).await?;
-
-        if note.len() == 0 {
-            println!("Note with an id of {} is not found", note_id);
-        }
+        let note = utils::get_note(&note_id).await?;
 
         let (id, title) = (note["id"].to_string(), note["title"].to_string());
 
@@ -43,11 +40,7 @@ pub async fn handle_args(
     }
 
     if let Some(note_id) = args.rename {
-        let note = requests::find_note(note_id.parse::<u16>()?).await?;
-
-        if note.len() == 0 {
-            println!("Note with an id of {} is not found", note_id);
-        }
+        let note = utils::get_note(&note_id).await?;
 
         let note_title = note["title"].to_string();
         let mut new_note_title = String::new();
@@ -68,11 +61,7 @@ pub async fn handle_args(
     }
 
     if let Some(note_id) = args.delete {
-        let note = requests::find_note(note_id.parse::<u16>()?).await?;
-
-        if note.len() == 0 {
-            println!("Note with an id of {} is not found", note_id);
-        }
+        let note = utils::get_note(&note_id).await?;
 
         let (id, title) = (note["id"].to_string(), note["title"].to_string());
 
