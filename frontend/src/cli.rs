@@ -67,8 +67,27 @@ pub async fn handle_args(
         println!("Updated note: {} {}", id, title);
     }
 
-    if let Some(note_title) = args.delete {
-        println!("Deleting note with title: {}", note_title);
+    if let Some(note_id) = args.delete {
+        let note = requests::find_note(note_id.parse::<u16>()?).await?;
+
+        if note.len() == 0 {
+            println!("Note with an id of {} is not found", note_id);
+        }
+
+        let (id, title) = (note["id"].to_string(), note["title"].to_string());
+
+        println!("Are you sure you want to delete {} {}? (y/n)", id, title);
+
+        let mut confirmation = String::new();
+
+        std::io::stdin().read_line(&mut confirmation)?;
+
+        if confirmation.trim() == "y" {
+            requests::delete(&client, note_id.parse::<u16>()?).await?;
+            println!("Note {} {} is deleted", id, title);
+        } else {
+            println!("Note {} {} is not deleted", id, title);
+        }
     }
 
     Ok(())
