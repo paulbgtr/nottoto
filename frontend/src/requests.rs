@@ -86,7 +86,20 @@ pub async fn update(
         data.insert("body", note_body);
     }
 
-    let res = client.patch(url).json(&data).send().await;
+    let res = client.patch(url).json(&data).send().await?;
+
+    match res.status() {
+        reqwest::StatusCode::OK => {
+            let note: HashMap<String, String> = res.json().await?;
+            println!("{:?}", note);
+        }
+        reqwest::StatusCode::BAD_REQUEST => {
+            return Err("Bad request".into());
+        }
+        _ => {
+            return Err("Something went wrong".into());
+        }
+    }
 
     Ok(())
 }
