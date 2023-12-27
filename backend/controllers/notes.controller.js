@@ -5,7 +5,7 @@ export const getAllNotes = async (req, res) => {
     const notes = await getNotes();
 
     if (!notes) {
-      res.status(404).json({ error: "No notes found" });
+      return res.status(404).json({ error: "No notes found" });
     }
 
     res.status(200).json(notes);
@@ -21,7 +21,7 @@ export const getNoteById = async (req, res) => {
     const [note] = await getNote(id);
 
     if (!note) {
-      res.status(404).json({ error: `Note with id ${id} is not found` });
+      return res.status(404).json({ error: `Note with id ${id} is not found` });
     }
 
     res.status(200).json(note);
@@ -35,13 +35,13 @@ export const postNote = async (req, res) => {
     const { title, body } = req.body;
 
     if (!title) {
-      res.status(400).json({ error: "Missing the required title value" });
+      return res.status(400).json({ error: "Missing the required title value" });
     }
 
     const [noteExists] = await getNoteByTitle(title);
 
     if (noteExists) {
-      res.status(400).json({ error: `Note with title ${title} already exists` });
+      return res.status(400).json({ error: `Note with title ${title} already exists` });
     }
 
     const note = await createNote({
@@ -60,7 +60,7 @@ export const updateNoteById = async (req, res) => {
     const { title, body } = req.body;
 
     if (!title && !body) {
-      res.status(400).json({ error: "Missing title and body values" });
+      return res.status(400).json({ error: "Missing title and body values" });
     }
 
     const note = await updateNote(id, {
@@ -80,7 +80,7 @@ export const deleteNoteById = async (req, res) => {
     const [note] = await getNote(id);
 
     if (!note) {
-      res.status(404).json({ error: `Note with id ${id} is not found` });
+      return res.status(404).json({ error: `Note with id ${id} is not found` });
     }
 
     const deletedNote = await deleteNote(id);
