@@ -74,7 +74,7 @@ pub async fn update(
     note_id: u16,
     note_title: Option<String>,
     note_body: Option<String>,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
     let url = format!("http://localhost:3000/notes/{}", note_id);
     let mut data = HashMap::new();
 
@@ -91,7 +91,7 @@ pub async fn update(
     match res.status() {
         reqwest::StatusCode::OK => {
             let note: HashMap<String, String> = res.json().await?;
-            println!("{:?}", note);
+            return Ok(note);
         }
         reqwest::StatusCode::BAD_REQUEST => {
             return Err("Bad request".into());
@@ -100,8 +100,6 @@ pub async fn update(
             return Err("Something went wrong".into());
         }
     }
-
-    Ok(())
 }
 
 pub async fn delete(
