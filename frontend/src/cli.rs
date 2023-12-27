@@ -42,8 +42,22 @@ pub async fn handle_args(
         println!("{}: {}", id, title);
     }
 
-    if let Some(note_title) = args.update {
-        println!("Updating note with title: {}", note_title);
+    if let Some(note_id) = args.rename {
+        let note = requests::find_note(note_id.parse::<u16>()?).await?;
+
+        if note.len() == 0 {
+            println!("Note with an id of {} is not found", note_id);
+        }
+
+        let note_title = note["title"].to_string();
+        let mut new_note_title = String::new();
+
+        println!("Enter new title for the note: {}", &note_title);
+
+        std::io::stdin().read_line(&mut new_note_title)?;
+
+        let renamed_note =
+            requests::update(&client, note_id.parse::<u16>()?, Some(new_note_title), None).await?;
     }
 
     if let Some(note_title) = args.delete {
