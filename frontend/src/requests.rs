@@ -47,6 +47,8 @@ pub async fn create(
 
     if let Some(note_body) = note_body {
         data.insert("body", note_body);
+    } else {
+        data.insert("body", "".to_string());
     }
 
     let res = client
