@@ -1,5 +1,7 @@
 use crate::requests;
 use crate::utils;
+use std::io::{Read, Seek, SeekFrom, Write};
+use tempfile::NamedTempFile;
 
 pub async fn handle_args(
     args: crate::args::Args,
@@ -27,8 +29,6 @@ pub async fn handle_args(
     }
 
     if let Some(note_title) = args.create {
-        // todo: impl creating a temp file and opening it in vim
-
         let created_note = requests::create(&client, note_title, None).await?;
 
         let (id, title) = (
@@ -77,6 +77,27 @@ pub async fn handle_args(
         } else {
             println!("Note {} {} is not deleted", id, title);
         }
+    }
+
+    if let Some(note_id) = args.edit {
+        let note = utils::get_note(&note_id).await?;
+
+        let body = note["body"].to_string();
+
+        let mut tmpfile = NamedTempFile::new()?;
+        write!(tmpfile, "{}", body)?;
+
+        std::process::Command::new("nano")
+            .arg(tmpfile.path())
+            .spawn()?
+            .wait()?;
+
+        tmpfile.seek(SeekFrom::Start(0))?;
+
+        let mut buf = String::new();
+        tmpfile.read_to_string(&mut buf)?;
+
+        let _ = requests::update(&client, note_id.parse::<u16>()?, None, Some(buf)).await?;
     }
 
     Ok(())
