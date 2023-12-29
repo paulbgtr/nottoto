@@ -28,6 +28,14 @@ pub async fn handle_args(
         println!("{}: {}", id, title);
     }
 
+    if let Some(note_id) = args.view {
+        let note = utils::get_note(&note_id).await?;
+
+        let body = note["body"].to_string();
+
+        print!("{}", body);
+    }
+
     if let Some(note_title) = args.create {
         let created_note = requests::create(&client, note_title, None).await?;
 
