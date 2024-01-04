@@ -46,7 +46,7 @@ export const signin = async (req, res) => {
       id: user.id,
     }, "secret", { expiresIn: "7d" });
 
-    res.cookie("jwt", jwt, {
+    res.cookie("jwt", token, {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     })
