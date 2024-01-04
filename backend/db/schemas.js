@@ -7,3 +7,10 @@ export const notes = pgTable("notes", {
   createdAt: timestamp("created_at", { withTimezone: true }).default(),
 });
 
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull(),
+  password: text("password").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).default(),
+});
+
