@@ -1,3 +1,4 @@
+use crate::auth;
 use crate::requests;
 use crate::utils;
 use std::io::{Read, Seek, SeekFrom, Write};
@@ -7,6 +8,15 @@ pub async fn handle_args(
     args: crate::args::Args,
     client: reqwest::Client,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    let is_logged_in = auth::is_logged_in()?;
+
+    if !args.join && !args.login && !is_logged_in {
+        println!("You are not logged in");
+        println!("Please login first using -l or --login");
+        println!("Or register using -j or --join");
+        return Ok(());
+    }
+
     if args.all {
         let notes = requests::get_all_notes().await?;
 
