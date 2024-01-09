@@ -11,7 +11,9 @@ use clap::Parser;
         "edit",
         "delete",
         "find",
-        "view"
+        "view",
+        "login",
+        "join"
     ])
 ))]
 pub struct Args {
@@ -35,4 +37,10 @@ pub struct Args {
 
     #[arg(short, long)]
     pub view: Option<String>,
+
+    #[arg(short, long)]
+    pub login: bool,
+
+    #[arg(short, long)]
+    pub join: bool,
 }
