@@ -1,4 +1,5 @@
 mod args;
+mod auth;
 mod cli;
 mod requests;
 mod utils;
