@@ -1,13 +1,24 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { getUserByEmail, createUser } from "../db/queries/users.js";
+import {
+  getUserById,
+  getUserByEmail,
+  createUser
+} from "../db/queries/users.js";
 
 export const signup = async (req, res) => {
   try {
-
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Missing email or password"
+      });
+    }
+
     const [user] = await getUserByEmail(email);
+
+    console.log("a");
 
     if (user) {
       return res.status(409).json({
@@ -20,7 +31,7 @@ export const signup = async (req, res) => {
     const createdUser = await createUser({
       email,
       password: hashedPassword
-    })
+    });
 
     res.status(201).json(createdUser);
   } catch (err) {
@@ -43,7 +54,7 @@ export const signin = async (req, res) => {
     }
 
     const token = jwt.sign({
-      id: user.id,
+      userId: user.id,
     }, "secret", { expiresIn: "7d" });
 
     res.cookie("jwt", token, {
@@ -55,6 +66,30 @@ export const signin = async (req, res) => {
       message: "Error signing in"
     });
   }
+}
+
+export const verify = async (req, res) => {
+  const { jwt: token } = req.cookies;
+
+  if (!token) {
+    return res.status(401).json({
+      message: "No token"
+    });
+  }
+
+  const decoded = jwt.verify(token, "secret");
+
+  const { userId } = decoded;
+
+  const [user] = await getUserById(userId);
+
+  if (!user) {
+    return res.status(401).json({
+      message: "Invalid token"
+    });
+  }
+
+  res.status(200).json(user);
 }
 
 export const signout = async (req, res) => {
