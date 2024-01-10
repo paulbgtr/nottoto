@@ -84,8 +84,8 @@ export const verify = async (req, res) => {
   const [user] = await getUserById(userId);
 
   if (!user) {
-    return res.status(401).json({
-      message: "Invalid token"
+    return res.status(404).json({
+      message: "User not found"
     });
   }
 
