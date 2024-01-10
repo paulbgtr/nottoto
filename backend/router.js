@@ -8,7 +8,8 @@ import {
 } from "./controllers/notes.controller.js";
 import {
   signup,
-  signin
+  signin,
+  verify
 } from "./controllers/auth.controller.js"
 
 const router = express.Router();
@@ -19,7 +20,8 @@ router.post("/notes", postNote);
 router.patch("/notes/:id", updateNoteById);
 router.delete("/notes/:id", deleteNoteById);
 
-router.post("/signup", signup);
-router.post("/signin", signin);
+router.post("/users/signup", signup);
+router.post("/users/signin", signin);
+router.get("/users/verify", verify);
 
 export default router;
