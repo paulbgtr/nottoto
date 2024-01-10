@@ -37,7 +37,7 @@ pub async fn find_note(
     }
 }
 
-pub async fn create(
+pub async fn create_note(
     client: &reqwest::Client,
     note_title: String,
     note_body: Option<String>,
@@ -71,7 +71,7 @@ pub async fn create(
     }
 }
 
-pub async fn update(
+pub async fn update_note(
     client: &reqwest::Client,
     note_id: u16,
     note_title: Option<String>,
@@ -104,7 +104,7 @@ pub async fn update(
     }
 }
 
-pub async fn delete(
+pub async fn delete_note(
     client: &reqwest::Client,
     note_id: u16,
 ) -> Result<&str, Box<dyn std::error::Error>> {

@@ -47,7 +47,7 @@ pub async fn handle_args(
     }
 
     if let Some(note_title) = args.create {
-        let created_note = requests::create(&client, note_title, None).await?;
+        let created_note = requests::create_note(&client, note_title, None).await?;
 
         let (id, title) = (
             created_note["id"].to_string(),
@@ -68,7 +68,8 @@ pub async fn handle_args(
         std::io::stdin().read_line(&mut new_note_title)?;
 
         let renamed_note =
-            requests::update(&client, note_id.parse::<u16>()?, Some(new_note_title), None).await?;
+            requests::update_note(&client, note_id.parse::<u16>()?, Some(new_note_title), None)
+                .await?;
 
         let (id, title) = (
             renamed_note["id"].to_string(),
@@ -90,7 +91,7 @@ pub async fn handle_args(
         std::io::stdin().read_line(&mut confirmation)?;
 
         if confirmation.trim() == "y" {
-            requests::delete(&client, note_id.parse::<u16>()?).await?;
+            requests::delete_note(&client, note_id.parse::<u16>()?).await?;
             println!("Note {} {} is deleted", id, title);
         } else {
             println!("Note {} {} is not deleted", id, title);
@@ -115,7 +116,7 @@ pub async fn handle_args(
         let mut buf = String::new();
         tmpfile.read_to_string(&mut buf)?;
 
-        let _ = requests::update(&client, note_id.parse::<u16>()?, None, Some(buf)).await?;
+        let _ = requests::update_note(&client, note_id.parse::<u16>()?, None, Some(buf)).await?;
     }
 
     Ok(())
