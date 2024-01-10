@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import db from "../db.js";
 import { users } from "../schemas.js";
 
 export const getUserById = async (id) => {
@@ -13,7 +14,8 @@ export const getUserByEmail = async (email) => {
   const res = await db
     .select()
     .from(users)
-    .where(eq("email", email));
+    .where(eq(users.email, email));
+
   return res;
 }
 
