@@ -124,3 +124,63 @@ pub async fn delete_note(
         }
     }
 }
+
+pub async fn user_register(
+    client: &reqwest::Client,
+    email: String,
+    password: String,
+) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
+    let url = "http://localhost:3000/users/signup";
+
+    let mut data = HashMap::new();
+
+    data.insert("email", &email);
+    data.insert("password", &password);
+
+    let res = client.post(url).json(&data).send().await?;
+
+    match res.status() {
+        reqwest::StatusCode::CREATED => {
+            let user: HashMap<String, String> = res.json().await?;
+            return Ok(user);
+        }
+        reqwest::StatusCode::BAD_REQUEST => {
+            return Err("Bad request".into());
+        }
+        _ => {
+            return Err("Something went wrong".into());
+        }
+    }
+}
+
+pub async fn user_login(
+    client: &reqwest::Client,
+    email: String,
+    password: String,
+) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
+    let url = "http://localhost:3000/users/signin";
+
+    let res = client
+        .post(url)
+        .json(&[("email", email), ("password", password)])
+        .send()
+        .await?;
+
+    match res.status() {
+        reqwest::StatusCode::OK => {
+            let user: HashMap<String, String> = res.json().await?;
+            return Ok(user);
+        }
+        reqwest::StatusCode::BAD_REQUEST => {
+            return Err("Bad request".into());
+        }
+        _ => {
+            return Err("Something went wrong".into());
+        }
+    }
+}
+
+pub async fn user_verify() -> Result<(), Box<dyn std::error::Error>> {
+    //todo
+    Ok(())
+}
