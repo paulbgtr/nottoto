@@ -18,8 +18,6 @@ export const signup = async (req, res) => {
 
     const [user] = await getUserByEmail(email);
 
-    console.log("a");
-
     if (user) {
       return res.status(409).json({
         message: "User already exists"
