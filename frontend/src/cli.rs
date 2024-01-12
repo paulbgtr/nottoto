@@ -17,6 +17,71 @@ pub async fn handle_args(
         return Ok(());
     }
 
+    if args.join {
+        let mut email = String::new();
+        let mut password = String::new();
+
+        println!("Enter your email: ");
+        std::io::stdin().read_line(&mut email)?;
+
+        let max_attempts = 3;
+        let mut attempts = 0;
+
+        while attempts < max_attempts {
+            password = rpassword::prompt_password("Your password:")?;
+            let repeat_password = rpassword::prompt_password("Repeat your password:")?;
+
+            if password == repeat_password {
+                break;
+            } else {
+                println!("Passwords do not match. Please try again");
+                attempts += 1;
+            }
+        }
+
+        if attempts == max_attempts {
+            println!("You have reached the maximum number of attempts. Try again later");
+            return Ok(());
+        }
+
+        let register_result = requests::user_register(
+            &client,
+            email.trim().to_string(),
+            password.trim().to_string(),
+        )
+        .await;
+
+        match register_result {
+            Ok(_) => {
+                println!("Registration successful");
+            }
+            Err(_) => {
+                println!("Registration failed");
+            }
+        }
+    }
+
+    if args.login {
+        let mut email = String::new();
+        let mut password = String::new();
+
+        println!("Enter your email: ");
+        std::io::stdin().read_line(&mut email)?;
+        println!("Enter your password: ");
+        std::io::stdin().read_line(&mut password)?;
+
+        let login_result = requests::user_login(&client, email, password).await;
+
+        match login_result {
+            Ok(_) => {
+                println!("Login successful");
+            }
+            Err(_) => {
+                println!("Incorrect email or password");
+            }
+        }
+    }
+
     if args.all {
         let notes = requests::get_all_notes().await?;
 
