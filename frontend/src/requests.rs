@@ -160,11 +160,12 @@ pub async fn user_login(
 ) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
     let url = "http://localhost:3000/users/signin";
 
-    let res = client
-        .post(url)
-        .json(&[("email", email), ("password", password)])
-        .send()
-        .await?;
+    let mut data = HashMap::new();
+
+    data.insert("email", &email);
+    data.insert("password", &password);
+
+    let res = client.post(url).json(&data).send().await?;
 
     match res.status() {
         reqwest::StatusCode::OK => {
