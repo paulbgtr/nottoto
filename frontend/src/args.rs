@@ -13,7 +13,8 @@ use clap::Parser;
         "find",
         "view",
         "login",
-        "join"
+        "join",
+        "quit"
     ])
 ))]
 pub struct Args {
@@ -43,4 +44,7 @@ pub struct Args {
 
     #[arg(short, long)]
     pub join: bool,
+
+    #[arg(short, long)]
+    pub quit: bool,
 }
