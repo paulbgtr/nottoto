@@ -82,6 +82,19 @@ pub async fn handle_args(
         }
     }
 
+    if args.quit {
+        let res = requests::user_logout(&client).await;
+
+        match res {
+            Ok(_) => {
+                println!("Logout successful");
+            }
+            Err(_) => {
+                println!("Logout failed");
+            }
+        }
+    }
+
     if args.all {
         let notes = requests::get_all_notes().await?;
 
