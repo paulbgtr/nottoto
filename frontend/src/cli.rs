@@ -1,15 +1,13 @@
-use crate::auth;
 use crate::requests;
 use crate::utils;
 use std::io::{Read, Seek, SeekFrom, Write};
 use tempfile::NamedTempFile;
 
 pub async fn handle_args(
+    is_logged_in: bool,
     args: crate::args::Args,
     client: reqwest::Client,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let is_logged_in = auth::is_logged_in(&client).await?;
-
     if !args.join && !args.login && !is_logged_in {
         println!("You are not logged in");
         println!("Please login first using -l or --login");
