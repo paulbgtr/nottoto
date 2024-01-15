@@ -181,10 +181,12 @@ pub async fn user_login(
     }
 }
 
-pub async fn user_verify() -> Result<&'static str, Box<dyn std::error::Error>> {
+pub async fn user_verify(
+    client: &reqwest::Client,
+) -> Result<&'static str, Box<dyn std::error::Error>> {
     let url = "http://localhost:3001/users/verify";
 
-    let res = reqwest::get(url).await?;
+    let res = client.get(url).send().await?;
 
     match res.status() {
         reqwest::StatusCode::OK => {
