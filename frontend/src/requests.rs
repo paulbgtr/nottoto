@@ -181,7 +181,20 @@ pub async fn user_login(
     }
 }
 
-pub async fn user_verify() -> Result<(), Box<dyn std::error::Error>> {
-    //todo
-    Ok(())
+pub async fn user_verify() -> Result<&'static str, Box<dyn std::error::Error>> {
+    let url = "http://localhost:3001/users/verify";
+
+    let res = reqwest::get(url).await?;
+
+    match res.status() {
+        reqwest::StatusCode::OK => {
+            return Ok("User verified");
+        }
+        reqwest::StatusCode::UNAUTHORIZED => {
+            return Err("Unauthorized".into());
+        }
+        _ => {
+            return Err("Something went wrong".into());
+        }
+    }
 }
