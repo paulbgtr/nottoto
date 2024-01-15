@@ -8,7 +8,7 @@ pub async fn handle_args(
     args: crate::args::Args,
     client: reqwest::Client,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let is_logged_in = auth::is_logged_in()?;
+    let is_logged_in = auth::is_logged_in(&client).await?;
 
     if !args.join && !args.login && !is_logged_in {
         println!("You are not logged in");
