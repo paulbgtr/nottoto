@@ -91,5 +91,17 @@ export const verify = async (req, res) => {
 }
 
 export const signout = async (req, res) => {
-  //todo
+  const { jwt: token } = req.cookies;
+
+  if (!token) {
+    return res.status(401).json({
+      message: "No token"
+    });
+  }
+
+  res.clearCookie("jwt");
+
+  res.status(200).json({
+    message: "Successfully signed out"
+  });
 }
