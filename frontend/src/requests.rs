@@ -134,8 +134,8 @@ pub async fn user_register(
 
     let mut data = HashMap::new();
 
-    data.insert("email", &email);
-    data.insert("password", &password);
+    data.insert("email", email.trim());
+    data.insert("password", password.trim());
 
     let res = client.post(url).json(&data).send().await?;
 
@@ -162,10 +162,12 @@ pub async fn user_login(
 
     let mut data = HashMap::new();
 
-    data.insert("email", &email);
-    data.insert("password", &password);
+    data.insert("email", email.trim());
+    data.insert("password", password.trim());
 
     let res = client.post(url).json(&data).send().await?;
+
+    println!("{:?}", &res.status());
 
     match res.status() {
         reqwest::StatusCode::OK => {
