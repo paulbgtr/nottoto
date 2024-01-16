@@ -183,21 +183,6 @@ pub async fn user_login(
     }
 }
 
-pub async fn user_logout(client: &reqwest::Client) -> Result<&str, Box<dyn ::std::error::Error>> {
-    let url = "http://localhost:3000/users/signout";
-
-    let res = client.post(url).send().await?;
-
-    match res.status() {
-        reqwest::StatusCode::OK => {
-            return Ok("User logged out");
-        }
-        _ => {
-            return Err("Something went wrong".into());
-        }
-    }
-}
-
 pub async fn user_verify(
     client: &reqwest::Client,
     token: String,
