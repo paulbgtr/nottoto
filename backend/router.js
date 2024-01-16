@@ -24,6 +24,6 @@ router.delete("/notes/:id", deleteNoteById);
 router.post("/users/signup", signup);
 router.post("/users/signin", signin);
 router.post("/users/signout", signout);
-router.get("/users/verify", verify);
+router.post("/users/verify", verify);
 
 export default router;
