@@ -9,7 +9,6 @@ import {
 import {
   signup,
   signin,
-  signout,
   verify
 } from "./controllers/auth.controller.js"
 
@@ -23,7 +22,6 @@ router.delete("/notes/:id", deleteNoteById);
 
 router.post("/users/signup", signup);
 router.post("/users/signin", signin);
-router.post("/users/signout", signout);
 router.post("/users/verify", verify);
 
 export default router;
