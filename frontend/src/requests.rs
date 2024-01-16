@@ -200,10 +200,15 @@ pub async fn user_logout(client: &reqwest::Client) -> Result<&str, Box<dyn ::std
 
 pub async fn user_verify(
     client: &reqwest::Client,
+    token: String,
 ) -> Result<&'static str, Box<dyn std::error::Error>> {
+    let mut data = HashMap::new();
+
+    data.insert("token", token);
+
     let url = "http://localhost:3001/users/verify";
 
-    let res = client.get(url).send().await?;
+    let res = client.post(url).json(&data).send().await?;
 
     match res.status() {
         reqwest::StatusCode::OK => {
