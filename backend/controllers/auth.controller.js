@@ -66,7 +66,7 @@ export const signin = async (req, res) => {
 }
 
 export const verify = async (req, res) => {
-  const { jwt: token } = req.cookies;
+  const { jwt: token } = req.body;
 
   if (!token) {
     return res.status(401).json({
