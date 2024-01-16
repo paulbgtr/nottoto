@@ -1,6 +1,7 @@
 use crate::auth;
 use crate::requests;
 use crate::utils;
+use std::fs;
 use std::io::{Read, Seek, SeekFrom, Write};
 use tempfile::NamedTempFile;
 
@@ -73,6 +74,9 @@ pub async fn handle_args(
 
         match login_result {
             Ok(_) => {
+                let mut token_file = fs::File::create("token.txt")?;
+                token_file.write_all(login_result?.get("token").unwrap().as_bytes())?;
+
                 println!("Login successful");
             }
             Err(_) => {
