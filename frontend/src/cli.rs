@@ -1,3 +1,4 @@
+use crate::auth;
 use crate::requests;
 use crate::utils;
 use std::io::{Read, Seek, SeekFrom, Write};
@@ -81,7 +82,7 @@ pub async fn handle_args(
     }
 
     if args.quit {
-        let res = requests::user_logout(&client).await;
+        let res = auth::user_logout(&client).await;
 
         match res {
             Ok(_) => {
