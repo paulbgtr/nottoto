@@ -82,7 +82,7 @@ pub async fn handle_args(
     }
 
     if args.quit {
-        let res = auth::user_logout(&client).await;
+        let res = auth::user_logout().await;
 
         match res {
             Ok(_) => {
