@@ -82,11 +82,11 @@ pub async fn handle_args(
     }
 
     if args.quit {
-        let res = auth::user_logout().await;
+        let res = auth::user_logout();
 
         match res {
             Ok(_) => {
-                println!("Logout successful");
+                println!("You have been logged out. Bye!");
             }
             Err(_) => {
                 println!("Logout failed");
