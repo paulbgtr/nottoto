@@ -1,10 +1,7 @@
 import express from "express";
-import cookieParser from "cookie-parser";
 import router from "./router.js";
 const app = express();
 const port = 3000;
-
-app.use(cookieParser());
 
 app.use(express.json());
 
