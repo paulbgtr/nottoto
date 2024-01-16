@@ -13,7 +13,7 @@ This application is designed with a robust Phoenix (Elixir) backend and a user-f
 
 ## Installation
 
-## Backend
+### Backend
 
 - Setup a PostgreSQL database with tables which definitions you may find in the `/backend/db/migrations.sql`.
 - Setup the backend by running:
@@ -24,7 +24,7 @@ npm i
 nodemon server.js
 ```
 
-## Frontend
+### Frontend
 
 - Compile the app and launch it using the following commands:
 
@@ -34,7 +34,7 @@ cargo run build --release
 ./target/release/frontend
 ```
 
-### Adding the program to PATH (doing so that you could use the program everywhere in your terminal)
+#### Adding the program to PATH (doing so that you could use the program everywhere in your terminal)
 
 This is done by adding the program to your path.
 
