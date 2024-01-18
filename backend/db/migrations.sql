@@ -15,7 +15,8 @@ create table
     title text not null,
     body text null,
     created_at timestamp with time zone not null default now(),
+    user_id bigint null,
     constraint notes_pkey primary key (id),
-    constraint notes_title_key unique (title)
+    constraint notes_title_key unique (title),
+    constraint notes_user_id_fkey foreign key (user_id) references users (id)
   ) tablespace pg_default;
-
