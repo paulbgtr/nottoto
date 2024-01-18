@@ -2,10 +2,11 @@ import { eq } from "drizzle-orm";
 import db from "../db.js";
 import { notes } from "../schemas.js";
 
-export const getNotes = async () => {
+export const getNotes = async (userId) => {
   const res = await db
     .select()
-    .from(notes);
+    .from(notes)
+    .where(eq(notes.userId, userId));
   return res;
 }
 
