@@ -6,7 +6,7 @@ export const getUserById = async (id) => {
   const res = await db
     .select()
     .from(users)
-    .where(eq("id", id));
+    .where(eq(users.id, id));
   return res;
 }
 
