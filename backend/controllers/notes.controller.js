@@ -1,8 +1,13 @@
 import { getNotes, getNote, getNoteByTitle, createNote, updateNote, deleteNote } from "../db/queries/notes.js";
+import { getUserId } from "../utils/getUserId.js";
 
 export const getAllNotes = async (req, res) => {
   try {
-    const notes = await getNotes();
+    const { token } = req.body;
+
+    const userId = getUserId(token);
+
+    const notes = await getNotes(userId);
 
     if (!notes) {
       return res.status(404).json({ error: "No notes found" });
