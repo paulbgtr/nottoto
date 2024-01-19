@@ -99,7 +99,7 @@ pub async fn handle_args(
     }
 
     if args.all {
-        let notes = requests::get_all_notes().await?;
+        let notes = requests::get_all_notes(&client).await?;
 
         if notes.len() == 0 {
             println!("No notes are found");
@@ -112,7 +112,7 @@ pub async fn handle_args(
     }
 
     if let Some(note_id) = args.find {
-        let note = utils::get_note(&note_id).await?;
+        let note = utils::get_note(&note_id, &client).await?;
 
         let (id, title) = (note["id"].to_string(), note["title"].to_string());
 
@@ -120,7 +120,7 @@ pub async fn handle_args(
     }
 
     if let Some(note_id) = args.view {
-        let note = utils::get_note(&note_id).await?;
+        let note = utils::get_note(&note_id, &client).await?;
 
         let body = note["body"].to_string();
 
@@ -139,7 +139,7 @@ pub async fn handle_args(
     }
 
     if let Some(note_id) = args.rename {
-        let note = utils::get_note(&note_id).await?;
+        let note = utils::get_note(&note_id, &client).await?;
 
         let note_title = note["title"].to_string();
         let mut new_note_title = String::new();
@@ -161,7 +161,7 @@ pub async fn handle_args(
     }
 
     if let Some(note_id) = args.delete {
-        let note = utils::get_note(&note_id).await?;
+        let note = utils::get_note(&note_id, &client).await?;
 
         let (id, title) = (note["id"].to_string(), note["title"].to_string());
 
@@ -180,7 +180,7 @@ pub async fn handle_args(
     }
 
     if let Some(note_id) = args.edit {
-        let note = utils::get_note(&note_id).await?;
+        let note = utils::get_note(&note_id, &client).await?;
 
         let body = note["body"].to_string();
 
