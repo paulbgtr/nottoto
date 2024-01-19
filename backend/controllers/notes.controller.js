@@ -3,7 +3,17 @@ import { getUserId } from "../utils/getUserId.js";
 
 export const getAllNotes = async (req, res) => {
   try {
-    const { token } = req.body;
+    if (!req.headers.authorization) {
+      return res.status(401).json({ error: "Missing Authorization Header" });
+    }
+
+    const headerParts = req.headers.authorization.split(" ");
+
+    if (headerParts.length !== 2 || headerParts[0] !== "Bearer") {
+      return res.status(401).json({ error: "Invalid Authorization Header" });
+    }
+
+    const token = headerParts[1];
 
     const userId = getUserId(token);
 
@@ -22,7 +32,18 @@ export const getAllNotes = async (req, res) => {
 export const getNoteById = async (req, res) => {
   try {
     const { id } = req.params;
-    const { token } = req.body;
+
+    if (!req.headers.authorization) {
+      return res.status(401).json({ error: "Missing Authorization Header" });
+    }
+
+    const headerParts = req.headers.authorization.split(" ");
+
+    if (headerParts.length !== 2 || headerParts[0] !== "Bearer") {
+      return res.status(401).json({ error: "Invalid Authorization Header" });
+    }
+
+    const token = headerParts[1];
 
     const userId = getUserId(token);
 
@@ -52,7 +73,17 @@ export const postNote = async (req, res) => {
       return res.status(400).json({ error: `Note with title ${title} already exists` });
     }
 
-    const { token } = req.body;
+    if (!req.headers.authorization) {
+      return res.status(401).json({ error: "Missing Authorization Header" });
+    }
+
+    const headerParts = req.headers.authorization.split(" ");
+
+    if (headerParts.length !== 2 || headerParts[0] !== "Bearer") {
+      return res.status(401).json({ error: "Invalid Authorization Header" });
+    }
+
+    const token = headerParts[1];
 
     const userId = getUserId(token);
 
@@ -75,7 +106,17 @@ export const updateNoteById = async (req, res) => {
       return res.status(400).json({ error: "Missing title and body values" });
     }
 
-    const { token } = req.body;
+    if (!req.headers.authorization) {
+      return res.status(401).json({ error: "Missing Authorization Header" });
+    }
+
+    const headerParts = req.headers.authorization.split(" ");
+
+    if (headerParts.length !== 2 || headerParts[0] !== "Bearer") {
+      return res.status(401).json({ error: "Invalid Authorization Header" });
+    }
+
+    const token = headerParts[1];
 
     const userId = getUserId(token);
 
@@ -99,7 +140,17 @@ export const deleteNoteById = async (req, res) => {
       return res.status(404).json({ error: `Note with id ${id} is not found` });
     }
 
-    const { token } = req.body;
+    if (!req.headers.authorization) {
+      return res.status(401).json({ error: "Missing Authorization Header" });
+    }
+
+    const headerParts = req.headers.authorization.split(" ");
+
+    if (headerParts.length !== 2 || headerParts[0] !== "Bearer") {
+      return res.status(401).json({ error: "Invalid Authorization Header" });
+    }
+
+    const token = headerParts[1];
 
     const userId = getUserId(token);
 
