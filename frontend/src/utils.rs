@@ -22,7 +22,7 @@ pub async fn handle_auth_header() -> Result<HeaderMap, Box<dyn std::error::Error
 
     let mut headers = HeaderMap::new();
 
-    headers.insert(AUTHORIZATION, format!("Beader {}", token).parse()?);
+    headers.insert(AUTHORIZATION, format!("Bearer {}", token).parse()?);
 
     Ok(headers)
 }
