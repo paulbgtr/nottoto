@@ -5,8 +5,9 @@ use std::fs;
 
 pub async fn get_note(
     note_id: &String,
+    client: &reqwest::Client,
 ) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
-    let note = requests::find_note(note_id.parse::<u16>()?).await?;
+    let note = requests::find_note(note_id.parse::<u16>()?, &client).await?;
 
     if note.len() == 0 {
         return Err("Note with an id of {} is not found".into());
