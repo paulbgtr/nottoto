@@ -1,5 +1,7 @@
 use crate::requests;
+use reqwest::header::{HeaderMap, AUTHORIZATION};
 use std::collections::HashMap;
+use std::fs;
 
 pub async fn get_note(
     note_id: &String,
@@ -13,3 +15,13 @@ pub async fn get_note(
     Ok(note)
 }
 
+pub async fn handle_auth_header() -> Result<HeaderMap, Box<dyn std::error::Error>> {
+    let token_path = "token.txt";
+    let token = fs::read_to_string(token_path)?;
+
+    let mut headers = HeaderMap::new();
+
+    headers.insert(AUTHORIZATION, format!("Beader {}", token).parse()?);
+
+    Ok(headers)
+}
