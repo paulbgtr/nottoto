@@ -1,9 +1,14 @@
+use crate::utils;
 use std::collections::HashMap;
 
-pub async fn get_all_notes() -> Result<Vec<HashMap<String, String>>, Box<dyn std::error::Error>> {
+pub async fn get_all_notes(
+    client: &reqwest::Client,
+) -> Result<Vec<HashMap<String, String>>, Box<dyn std::error::Error>> {
     let url = "http://localhost:3000/notes";
 
-    let res = reqwest::get(url).await?;
+    let headers = utils::handle_auth_header().await?;
+
+    let res = client.get(url).headers(headers).send().await?;
 
     match res.status() {
         reqwest::StatusCode::OK => {
@@ -18,10 +23,13 @@ pub async fn get_all_notes() -> Result<Vec<HashMap<String, String>>, Box<dyn std
 
 pub async fn find_note(
     note_id: u16,
+    client: &reqwest::Client,
 ) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
     let url = format!("http://localhost:3000/notes/{}", note_id);
 
-    let res = reqwest::get(url).await?;
+    let headers = utils::handle_auth_header().await?;
+
+    let res = client.get(url).headers(headers).send().await?;
 
     match res.status() {
         reqwest::StatusCode::OK => {
@@ -45,6 +53,8 @@ pub async fn create_note(
     let mut data = HashMap::new();
     data.insert("title", note_title);
 
+    let headers = utils::handle_auth_header().await?;
+
     if let Some(note_body) = note_body {
         data.insert("body", note_body);
     } else {
@@ -53,6 +63,7 @@ pub async fn create_note(
 
     let res = client
         .post("http://localhost:3000/notes")
+        .headers(headers)
         .json(&data)
         .send()
         .await?;
@@ -80,6 +91,8 @@ pub async fn update_note(
     let url = format!("http://localhost:3000/notes/{}", note_id);
     let mut data = HashMap::new();
 
+    let headers = utils::handle_auth_header().await?;
+
     if let Some(note_title) = note_title {
         data.insert("title", note_title);
     }
@@ -88,7 +101,12 @@ pub async fn update_note(
         data.insert("body", note_body);
     }
 
-    let res = client.patch(url).json(&data).send().await?;
+    let res = client
+        .patch(url)
+        .headers(headers)
+        .json(&data)
+        .send()
+        .await?;
 
     match res.status() {
         reqwest::StatusCode::OK => {
@@ -110,7 +128,9 @@ pub async fn delete_note(
 ) -> Result<&str, Box<dyn std::error::Error>> {
     let url = format!("http://localhost:3000/notes/{}", note_id);
 
-    let res = client.delete(url).send().await?;
+    let headers = utils::handle_auth_header().await?;
+
+    let res = client.delete(url).headers(headers).send().await?;
 
     match res.status() {
         reqwest::StatusCode::OK => {
@@ -132,12 +152,14 @@ pub async fn user_register(
 ) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
     let url = "http://localhost:3000/users/signup";
 
+    let headers = utils::handle_auth_header().await?;
+
     let mut data = HashMap::new();
 
     data.insert("email", email.trim());
     data.insert("password", password.trim());
 
-    let res = client.post(url).json(&data).send().await?;
+    let res = client.post(url).headers(headers).json(&data).send().await?;
 
     match res.status() {
         reqwest::StatusCode::CREATED => {
@@ -160,14 +182,14 @@ pub async fn user_login(
 ) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
     let url = "http://localhost:3000/users/signin";
 
+    let headers = utils::handle_auth_header().await?;
+
     let mut data = HashMap::new();
 
     data.insert("email", email.trim());
     data.insert("password", password.trim());
 
-    let res = client.post(url).json(&data).send().await?;
-
-    println!("{:?}", &res.status());
+    let res = client.post(url).headers(headers).json(&data).send().await?;
 
     match res.status() {
         reqwest::StatusCode::OK => {
@@ -189,9 +211,9 @@ pub async fn user_verify(
 ) -> Result<&'static str, Box<dyn std::error::Error>> {
     let mut data = HashMap::new();
 
-    data.insert("token", token);
+    data.insert("jwt", token);
 
-    let url = "http://localhost:3001/users/verify";
+    let url = "http://localhost:3000/users/verify";
 
     let res = client.post(url).json(&data).send().await?;
 
