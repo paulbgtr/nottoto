@@ -10,16 +10,17 @@ export const getNotes = async (userId) => {
   return res;
 }
 
-export const getNote = async (id, userId) => {
+export const getNote = async (noteId, userId) => {
   const res = await db
     .select()
     .from(notes)
     .where(
       and(
-        eq(notes.id, id),
-        eq(notes.userId, userId)
+        eq(notes.userId, userId),
+        eq(notes.id, noteId),
       )
     );
+  console.log(res)
   return res;
 }
 
