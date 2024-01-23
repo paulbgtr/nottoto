@@ -88,7 +88,7 @@ pub async fn update_note(
     note_id: u16,
     note_title: Option<String>,
     note_body: Option<String>,
-) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
+) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
     let url = format!("http://localhost:3000/notes/{}", note_id);
     let mut data = HashMap::new();
 
@@ -111,7 +111,7 @@ pub async fn update_note(
 
     match res.status() {
         reqwest::StatusCode::OK => {
-            let note: HashMap<String, String> = res.json().await?;
+            let note = serde_json::from_str(&res.text().await?)?;
             return Ok(note);
         }
         reqwest::StatusCode::BAD_REQUEST => {
