@@ -47,7 +47,7 @@ export const getNoteById = async (req, res) => {
 
     const userId = getUserId(token);
 
-    const [note] = await getNote(userId, id);
+    const [note] = await getNote(id, userId);
 
     if (!note) {
       return res.status(404).json({ error: `Note with id ${id} is not found` });
