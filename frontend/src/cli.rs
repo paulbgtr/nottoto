@@ -131,8 +131,8 @@ pub async fn handle_args(
         let created_note = requests::create_note(&client, note_title, None).await?;
 
         let (id, title) = (
-            created_note["id"].to_string(),
-            created_note["title"].to_string(),
+            created_note[0]["id"].to_string(),
+            created_note[0]["title"].to_string(),
         );
 
         println!("{}: {}", id, title);
