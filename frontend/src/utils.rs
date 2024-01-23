@@ -1,18 +1,13 @@
 use crate::requests;
 use reqwest::header::{HeaderMap, AUTHORIZATION};
-use std::collections::HashMap;
+use serde_json;
 use std::fs;
 
 pub async fn get_note(
     note_id: &String,
     client: &reqwest::Client,
-) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
+) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
     let note = requests::find_note(note_id.parse::<u16>()?, &client).await?;
-
-    if note.len() == 0 {
-        return Err("Note with an id of {} is not found".into());
-    }
-
     Ok(note)
 }
 
