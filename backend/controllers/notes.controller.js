@@ -134,12 +134,6 @@ export const deleteNoteById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const [note] = await getNote(id);
-
-    if (!note) {
-      return res.status(404).json({ error: `Note with id ${id} is not found` });
-    }
-
     if (!req.headers.authorization) {
       return res.status(401).json({ error: "Missing Authorization Header" });
     }
@@ -153,6 +147,12 @@ export const deleteNoteById = async (req, res) => {
     const token = headerParts[1];
 
     const userId = getUserId(token);
+
+    const [note] = await getNote(id, userId);
+
+    if (!note) {
+      return res.status(404).json({ error: `Note with id ${id} is not found` });
+    }
 
     const deletedNote = await deleteNote(id, userId);
     res.status(200).json({
