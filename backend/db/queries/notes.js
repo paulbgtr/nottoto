@@ -20,7 +20,6 @@ export const getNote = async (noteId, userId) => {
         eq(notes.id, noteId),
       )
     );
-  console.log(res)
   return res;
 }
 
