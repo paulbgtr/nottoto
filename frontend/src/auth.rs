@@ -14,15 +14,21 @@ pub async fn is_logged_in(client: &reqwest::Client) -> Result<bool, Box<dyn std:
     let token_path = "token.txt";
     let token = fs::read_to_string(token_path);
 
-    if let Ok(token) = token {
-        let user = requests::user_verify(&client, token).await;
+    match token {
+        Ok(token) => {
+            let user = requests::user_verify(&client, token).await;
 
-        if let Ok(_) = user {
-            return Ok(true);
-        } else {
+            match user {
+                Ok(_) => {
+                    return Ok(true);
+                }
+                Err(_) => {
+                    return Ok(false);
+                }
+            }
+        }
+        Err(_) => {
             return Ok(false);
         }
-    } else {
-        return Ok(false);
     }
 }
