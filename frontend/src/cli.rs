@@ -148,13 +148,17 @@ pub async fn handle_args(
 
         std::io::stdin().read_line(&mut new_note_title)?;
 
-        let renamed_note =
-            requests::update_note(&client, note_id.parse::<u16>()?, Some(new_note_title), None)
-                .await?;
+        let renamed_note = requests::update_note(
+            &client,
+            note_id.parse::<u16>()?,
+            Some(new_note_title.trim().to_string()),
+            None,
+        )
+        .await?;
 
         let (id, title) = (
-            renamed_note["id"].to_string(),
-            renamed_note["title"].to_string(),
+            renamed_note[0]["id"].to_string(),
+            renamed_note[0]["title"].to_string(),
         );
 
         println!("Updated note: {} {}", id, title);
