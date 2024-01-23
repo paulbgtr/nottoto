@@ -1,9 +1,10 @@
 use crate::utils;
+use serde_json;
 use std::collections::HashMap;
 
 pub async fn get_all_notes(
     client: &reqwest::Client,
-) -> Result<Vec<HashMap<String, String>>, Box<dyn std::error::Error>> {
+) -> Result<Vec<serde_json::Value>, Box<dyn std::error::Error>> {
     let url = "http://localhost:3000/notes";
 
     let headers = utils::handle_auth_header().await?;
@@ -12,7 +13,7 @@ pub async fn get_all_notes(
 
     match res.status() {
         reqwest::StatusCode::OK => {
-            let notes: Vec<HashMap<String, String>> = res.json().await?;
+            let notes = serde_json::from_str(&res.text().await?)?;
             return Ok(notes);
         }
         _ => {
@@ -24,7 +25,7 @@ pub async fn get_all_notes(
 pub async fn find_note(
     note_id: u16,
     client: &reqwest::Client,
-) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
+) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
     let url = format!("http://localhost:3000/notes/{}", note_id);
 
     let headers = utils::handle_auth_header().await?;
@@ -33,7 +34,7 @@ pub async fn find_note(
 
     match res.status() {
         reqwest::StatusCode::OK => {
-            let note: HashMap<String, String> = res.json().await?;
+            let note = serde_json::from_str(&res.text().await?)?;
             return Ok(note);
         }
         reqwest::StatusCode::NOT_FOUND => {
@@ -49,7 +50,7 @@ pub async fn create_note(
     client: &reqwest::Client,
     note_title: String,
     note_body: Option<String>,
-) -> Result<HashMap<String, String>, Box<dyn std::error::Error>> {
+) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
     let mut data = HashMap::new();
     data.insert("title", note_title);
 
@@ -70,7 +71,7 @@ pub async fn create_note(
 
     match res.status() {
         reqwest::StatusCode::CREATED => {
-            let note: HashMap<String, String> = res.json().await?;
+            let note = serde_json::from_str(&res.text().await?)?;
             return Ok(note);
         }
         reqwest::StatusCode::BAD_REQUEST => {
